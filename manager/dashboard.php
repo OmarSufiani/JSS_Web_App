@@ -73,7 +73,7 @@ if (!isset($_SESSION['user_id'])) {
                     <a class="btn btn-primary" href="active_students.php">➕ Students Subject Auto Assign to Next Year</a>
                      <a class="btn btn-primary" href="manage_users.php">➕ Manage_users</a>
                    
-                    <a class="btn btn-primary" href="edit_student.php">➕ Edit Student</a>
+                    <a class="btn btn-primary" href="edit_student.php">➕ Edit Student Status</a>
                      <a class="btn btn-secondary" href="update_user.php">⚙️ Settings</a>
                 <?php endif; ?>
 
@@ -86,14 +86,14 @@ if (!isset($_SESSION['user_id'])) {
                     <a class="btn btn-primary" href="add_teacher.php">➕ Add Teacher</a>
                     <a class="btn btn-primary" href="tsubject_class.php">➕ Teacher Subject/Class</a>
                     <a class="btn btn-primary" href="add_classteacher.php">➕ Assign Class Teacher</a>
-                    <a class="btn btn-primary" href="delete_student.php">➕ View Students </a>
+                    <a class="btn btn-primary" href="delete_student.php">➕ Manage Students </a>
                      <a class="btn btn-primary" href="delete_scores.php">➕ Manage Scores </a>
                     <a class="btn btn-primary" href="file.php">➕ All files</a>
                     <a class="btn btn-primary" href="csv.php">📊 View Report</a>
                      <a class="btn btn-primary" href="view_exams.php">➕ Exams</a>
                 <a class="btn btn-primary" href="report_form.php">📄 Download Report Form</a>
                 <a class="btn btn-primary" href="active_students.php">➕ Check Students Promotion Status</a>
-                    <a class="btn btn-primary" href="edit_student.php">➕ Edit Student</a>
+                    <a class="btn btn-primary" href="edit_student.php">➕ Edit Student status</a>
                      <a class="btn btn-primary" href="manage_users.php">➕ Manage_users</a>
           
                 <a class="btn btn-primary" href="manage_teachers.php">➕ Manage_Teachers</a>
