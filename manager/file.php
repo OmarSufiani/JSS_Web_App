@@ -43,13 +43,8 @@ $files = getFiles($uploadDir);
 <body class="bg-light">
 
 <div class="container py-5">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3">📁 Admin Dashboard - File Manager</h1>
-    <div>
-      <a href="dashboard.php" class="btn btn-outline-primary me-2">← Back to Dashboard</a>
-      <a href="logout.php" class="btn btn-warning">Logout</a>
-    </div>
-  </div>
+<a href="dashboard.php" class="btn btn-outline-primary me-2">← Back to Dashboard</a> <br><br>
+
 
   <h3 class="mb-3">Uploaded Files</h3>
 
