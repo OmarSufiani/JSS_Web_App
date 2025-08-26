@@ -11,9 +11,9 @@ $school_id = $_SESSION['school_id'];
 $message = '';
 
 $available_subjects = [
+    'MATHEMATICS',
     'ENGLISH',
     'KISWAHILI',
-    'MATHEMATICS',
     'PRE-TECHNICALS',
     'INTERGRATED-SCIENCE',
     'SOCIAL STUDIES',
@@ -30,11 +30,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $message = "❌ Please select at least one subject.";
     } else {
         $added = 0;
+        $duplicates = [];
+
         foreach ($subjects_selected as $name) {
             // Determine if subject is compulsory
             $is_compulsory = ($name === 'CRE' || $name === 'IRE') ? 0 : 1;
 
-            // Prevent duplicates
+            // ✅ Prevent duplicates (check by name + school_id)
             $stmt_check = $conn->prepare("SELECT id FROM subject WHERE name=? AND school_id=?");
             $stmt_check->bind_param("si", $name, $school_id);
             $stmt_check->execute();
@@ -47,11 +49,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $added++;
                 }
                 $stmt->close();
+            } else {
+                // ✅ Collect duplicates for feedback
+                $duplicates[] = $name;
             }
             $stmt_check->close();
         }
 
-        $message = "✅ Added {$added} new subject(s)!";
+        if ($added > 0 && empty($duplicates)) {
+            $message = "✅ Successfully added {$added} new subject(s)!";
+        } elseif ($added > 0 && !empty($duplicates)) {
+            $message = "⚠️ Added {$added} subject(s), but these already exist: " . implode(", ", $duplicates);
+        } else {
+            $message = "❌ No new subjects were added. These already exist: " . implode(", ", $duplicates);
+        }
     }
 
     $_SESSION['message'] = $message;

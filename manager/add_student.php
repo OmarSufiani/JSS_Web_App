@@ -17,7 +17,6 @@ $classQuery->bind_param("i", $school_id);
 $classQuery->execute();
 $classResult = $classQuery->get_result();
 $classQuery->close();
-
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $firstname      = $conn->real_escape_string(trim($_POST['firstname']));
     $lastname       = $conn->real_escape_string(trim($_POST['lastname']));
@@ -51,30 +50,45 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     if (empty($error)) {
-        // Insert student
-        $stmt = $conn->prepare("INSERT INTO student 
-            (firstname, lastname, gender, dob, guardian_name, guardian_phone, address, status, photo, admno, school_id, class_id) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssssssssii", $firstname, $lastname, $gender, $dob, $guardian_name, $guardian_phone, $address, $status, $photo_path, $admno, $school_id, $class_id);
+        // ✅ Prevent duplicate admission number for same school
+        $check = $conn->prepare("SELECT id FROM student WHERE admno = ? AND school_id = ?");
+        $check->bind_param("si", $admno, $school_id);
+        $check->execute();
+        $check->store_result();
 
-        if ($stmt->execute()) {
-            $student_id = $conn->insert_id;
-
-            // Assign compulsory subjects for selected class and school
-            $assign = "INSERT INTO student_subject (student_id, class_id, subject_id, school_id)
-                       SELECT ?, ?, s.id, ?
-                       FROM subject s
-                       WHERE s.is_compulsory = 1 AND s.school_id = ?";
-            $stmt2 = $conn->prepare($assign);
-            $stmt2->bind_param("iiii", $student_id, $class_id, $school_id, $school_id);
-            $stmt2->execute();
-            $stmt2->close();
-
-            $success = "✅ Student added successfully and compulsory subjects assigned!";
+        if ($check->num_rows > 0) {
+            $error = "❌ A student with Admission No. {$admno} already exists in this school.";
         } else {
-            $error = "❌ Database error: " . $stmt->error;
+            // Insert student
+            $stmt = $conn->prepare("INSERT INTO student 
+                (firstname, lastname, gender, dob, guardian_name, guardian_phone, address, status, photo, admno, school_id, class_id) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssssssssii", 
+                $firstname, $lastname, $gender, $dob, $guardian_name, 
+                $guardian_phone, $address, $status, $photo_path, 
+                $admno, $school_id, $class_id
+            );
+
+            if ($stmt->execute()) {
+                $student_id = $conn->insert_id;
+
+                // Assign compulsory subjects for selected class and school
+                $assign = "INSERT INTO student_subject (student_id, class_id, subject_id, school_id)
+                           SELECT ?, ?, s.id, ?
+                           FROM subject s
+                           WHERE s.is_compulsory = 1 AND s.school_id = ?";
+                $stmt2 = $conn->prepare($assign);
+                $stmt2->bind_param("iiii", $student_id, $class_id, $school_id, $school_id);
+                $stmt2->execute();
+                $stmt2->close();
+
+                $success = "✅ Student added successfully and compulsory subjects assigned!";
+            } else {
+                $error = "❌ Database error: " . $stmt->error;
+            }
+            $stmt->close();
         }
-        $stmt->close();
+        $check->close();
     }
 }
 ?>

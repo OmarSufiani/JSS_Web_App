@@ -33,15 +33,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($user_id) || empty($name)) {
         $error = "❌ All fields are required.";
     } else {
-        // ✅ Find last enrolment number for this school
-        $lastSql = $conn->prepare("SELECT enrolment_no FROM teacher WHERE school_id = ? ORDER BY id DESC LIMIT 1");
-        $lastSql->bind_param("i", $school_id);
-        $lastSql->execute();
-        $lastResult = $lastSql->get_result();
-        $lastRow = $lastResult->fetch_assoc();
+        // ✅ Check if this user is already a teacher in this school
+        $checkStmt = $conn->prepare("SELECT id, enrolment_no FROM teacher WHERE user_id = ? AND school_id = ?");
+        $checkStmt->bind_param("ii", $user_id, $school_id);
+        $checkStmt->execute();
+        $checkResult = $checkStmt->get_result();
 
-                if ($lastRow) {
-                // Extract numeric part
+        if ($checkResult->num_rows > 0) {
+            // Already exists
+            $existing = $checkResult->fetch_assoc();
+            $error = "⚠️ This teacher is already registered with Enrolment No: " . htmlspecialchars($existing['enrolment_no']);
+        } else {
+            // ✅ Find last enrolment number for this school
+            $lastSql = $conn->prepare("SELECT enrolment_no FROM teacher WHERE school_id = ? ORDER BY id DESC LIMIT 1");
+            $lastSql->bind_param("i", $school_id);
+            $lastSql->execute();
+            $lastResult = $lastSql->get_result();
+            $lastRow = $lastResult->fetch_assoc();
+
+            if ($lastRow) {
                 $lastNum = intval(substr($lastRow['enrolment_no'], strlen($school_code)));
                 $newNum = $lastNum + 1;
             } else {
@@ -52,23 +62,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // ✅ Format as 3-digit number (001, 002, 003...)
             $enrolment_no = $school_code . str_pad($newNum, 3, "0", STR_PAD_LEFT);
 
+            // ✅ Insert new teacher
+            $stmt = $conn->prepare("INSERT INTO teacher (user_id, name, school_id, enrolment_no, date_hired) 
+                                    VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param("isiss", $user_id, $name, $school_id, $enrolment_no, $date_hired);
 
-        // ✅ Insert new teacher
-        $stmt = $conn->prepare("INSERT INTO teacher (user_id, name, school_id, enrolment_no, date_hired) 
-                                VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("isiss", $user_id, $name, $school_id, $enrolment_no, $date_hired);
+            if ($stmt->execute()) {
+                $_SESSION['success'] = "✅ Teacher added successfully with Enrolment No: $enrolment_no";
+                header("Location: add_teacher.php");
+                exit();
+            } else {
+                $error = "❌ Error: " . $stmt->error;
+            }
 
-        if ($stmt->execute()) {
-            $_SESSION['success'] = "✅ Teacher added successfully with Enrolment No: $enrolment_no";
-            header("Location: add_teacher.php");
-            exit();
-        } else {
-            $error = "❌ Error: " . $stmt->error;
+            $stmt->close();
         }
 
-        $stmt->close();
+        $checkStmt->close();
     }
 }
+
 
 // ✅ Fetch only users with role = 'teacher' for current school
 $users = mysqli_query($conn, "

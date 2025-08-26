@@ -9,7 +9,6 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['school_id'])) {
 
 $school_id = $_SESSION['school_id'];
 $success = '';
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $teacher_id = $_POST['teacher_id'];
     $subjects = $_POST['subject_ids'] ?? [];
@@ -17,6 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!empty($subjects) && !empty($classes)) {
         $inserted = 0;
+        $duplicates = [];
+
         foreach ($subjects as $subject_id) {
             foreach ($classes as $class_id) {
                 // Prevent duplicate
@@ -25,7 +26,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       AND subject_id = $subject_id 
                       AND class_id = $class_id 
                       AND school_id = $school_id");
-                if (mysqli_num_rows($check) == 0) {
+                if (mysqli_num_rows($check) > 0) {
+                    // Add to duplicate error list
+                    $duplicates[] = "Subject ID $subject_id - Class ID $class_id already exists.";
+                } else {
                     $stmt = $conn->prepare("INSERT INTO tsubject_class (teacher_id, subject_id, class_id, school_id) VALUES (?, ?, ?, ?)");
                     $stmt->bind_param("iiii", $teacher_id, $subject_id, $class_id, $school_id);
                     if ($stmt->execute()) {
@@ -35,7 +39,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
         }
-        $success = "<div class='alert alert-success text-center'>✅ Assigned {$inserted} new records!</div>";
+
+        if (!empty($duplicates)) {
+            $success = "<div class='alert alert-danger'><strong>⚠️ Could not add ,These entries  already exists!! try again:</strong><br></div>";
+        } elseif ($inserted > 0) {
+            $success = "<div class='alert alert-success text-center'>✅ Assigned {$inserted} new records!</div>";
+        } else {
+            $success = "<div class='alert alert-warning text-center'>⚠️ No records were inserted.</div>";
+        }
     } else {
         $success = "<div class='alert alert-warning text-center'>⚠️ Please select at least one subject and one class.</div>";
     }

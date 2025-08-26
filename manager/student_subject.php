@@ -36,19 +36,29 @@ try {
         $class_id = intval($_POST['class_id']);
         $selected_subjects = $_POST['subject_ids'];
         $assigned_count = 0;
-        $skipped_count = 0;
+        $duplicates = []; // ✅ track duplicates by name
 
         foreach ($selected_subjects as $subject_id) {
             $subject_id = intval($subject_id);
 
-            // Check if assignment already exists for this class
-            $check = $conn->prepare("SELECT id FROM student_subject WHERE student_id=? AND subject_id=? AND class_id=? AND school_id=?");
+            // Get subject name for reporting
+            $sub_stmt = $conn->prepare("SELECT name FROM subject WHERE id=? AND school_id=?");
+            $sub_stmt->bind_param("ii", $subject_id, $school_id);
+            $sub_stmt->execute();
+            $sub_stmt->bind_result($subject_name);
+            $sub_stmt->fetch();
+            $sub_stmt->close();
+
+            // Check if assignment already exists
+            $check = $conn->prepare("SELECT id FROM student_subject 
+                                     WHERE student_id=? AND subject_id=? AND class_id=? AND school_id=?");
             $check->bind_param("iiii", $student_id, $subject_id, $class_id, $school_id);
             $check->execute();
             $check->store_result();
 
             if ($check->num_rows > 0) {
-                $skipped_count++;
+                // ✅ subject already exists for this student + class
+                $duplicates[] = $subject_name;
             } else {
                 $sql = "INSERT INTO student_subject (student_id, school_id, subject_id, class_id) VALUES (?, ?, ?, ?)";
                 $stmt = $conn->prepare($sql);
@@ -60,11 +70,14 @@ try {
             $check->close();
         }
 
-        if ($assigned_count > 0) {
+        // Build feedback messages
+        if ($assigned_count > 0 && empty($duplicates)) {
             $success = "✅ Assigned $assigned_count subject(s) successfully.";
-        }
-        if ($skipped_count > 0) {
-            $error .= " ⚠ $skipped_count subject(s) were already assigned to this class.";
+        } elseif ($assigned_count > 0 && !empty($duplicates)) {
+            $success = "✅ Assigned $assigned_count subject(s).";
+            $error = " ⚠ Already assigned: " . implode(", ", $duplicates);
+        } else {
+            $error = "❌ No new subjects assigned. Already assigned: " . implode(", ", $duplicates);
         }
 
         $_SESSION['message'] = trim($success . ' ' . $error);
@@ -82,6 +95,7 @@ try {
 $message = $_SESSION['message'] ?? '';
 unset($_SESSION['message']);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

@@ -11,26 +11,36 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['school_id'])) {
 $school_id = $_SESSION['school_id'];
 $message = '';
 
-
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim($_POST['name']);
- 
 
     if ($name === '') {
         $message = "❌ Class name cannot be empty.";
     } else {
-        // Insert class with school_id and school_code
-        $stmt = $conn->prepare("INSERT INTO class (name, school_id) VALUES ( ?, ?)");
-        $stmt->bind_param("si", $name, $school_id);
+        // ✅ Check if class already exists for this school
+        $stmt_check = $conn->prepare("SELECT id FROM class WHERE name = ? AND school_id = ?");
+        $stmt_check->bind_param("si", $name, $school_id);
+        $stmt_check->execute();
+        $stmt_check->store_result();
 
-        if ($stmt->execute()) {
-            $_SESSION['message'] = "✅ Class added successfully!";
+        if ($stmt_check->num_rows > 0) {
+            // Duplicate found
+            $_SESSION['message'] = "⚠️ Class '$name' already exists for this school.";
         } else {
-            $_SESSION['message'] = "❌ Failed to add class. Please try again. Error: " . $stmt->error;
-        }
+            // Insert class
+            $stmt = $conn->prepare("INSERT INTO class (name, school_id) VALUES (?, ?)");
+            $stmt->bind_param("si", $name, $school_id);
 
-        $stmt->close();
+            if ($stmt->execute()) {
+                $_SESSION['message'] = "✅ Class '$name' added successfully!";
+            } else {
+                $_SESSION['message'] = "❌ Failed to add class. Error: " . $stmt->error;
+            }
+            $stmt->close();
+        }
+        $stmt_check->close();
+
         header("Location: " . $_SERVER['PHP_SELF']);
         exit();
     }
@@ -41,6 +51,7 @@ if (isset($_SESSION['message'])) {
     unset($_SESSION['message']);
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
