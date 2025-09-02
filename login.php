@@ -90,13 +90,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="card shadow p-4 rounded-4">
             <h2 class="text-center mb-4">Login</h2>
 
+            <!-- ✅ Centered green spinner -->
+            <div class="d-flex justify-content-center mb-3">
+                <span class="spinner-border text-success" 
+                      role="status" 
+                      aria-hidden="true" 
+                      id="loadingSpinner" 
+                      style="display:none; width:2rem; height:2rem;">
+                </span>
+            </div>
+
             <?php if (!empty($error)): ?>
                 <div class="alert alert-danger text-center"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
-           <!-- Spinner (centered) -->
-        <div class="d-flex justify-content-center mb-3">
-          <div id="loadingSpinner" class="spinner-border text-success"></div>
-        </div>
+
             <form method="POST" id="loginForm">
                 <div class="mb-3">
                     <label for="email" class="form-label">Email address</label>
@@ -110,7 +117,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <button type="submit" id="loginBtn" class="btn btn-primary w-100">
                     Login
-                   
                 </button>
             </form>
 
@@ -136,10 +142,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // ⏳ Wait 3 seconds, then submit
         setTimeout(() => {
             form.submit();
-        }, 2000);
+        }, 3000);
     });
 </script>
-
 
 </body>
 </html>
