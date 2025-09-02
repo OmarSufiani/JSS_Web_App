@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 4.9.0.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Aug 25, 2025 at 08:21 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- Host: sql200.infinityfree.com
+-- Generation Time: Sep 02, 2025 at 07:37 AM
+-- Server version: 11.4.7-MariaDB
+-- PHP Version: 7.2.22
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -18,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ramzy`
+-- Database: `if0_38341635_omar`
 --
 
 -- --------------------------------------------------------
@@ -61,7 +62,8 @@ INSERT INTO `class` (`id`, `name`, `school_id`) VALUES
 (56, '8BLUE', 4),
 (57, '8YELLOW', 4),
 (58, '9BLUE', 4),
-(59, '9YELLOW', 4);
+(59, '9YELLOW', 4),
+(61, '7B', 2);
 
 -- --------------------------------------------------------
 
@@ -108,8 +110,8 @@ CREATE TABLE `exam` (
 --
 
 INSERT INTO `exam` (`id`, `exam_name`, `term`, `exam_type`, `year`, `subject`, `file_path`, `created_at`, `school_id`, `teacher_id`) VALUES
-(14, 'FORM 4 MATHEMATICS', 'TERM1', 'CAT', '2025', 'MATHS', '../uploads/exams/1755693718_report_27_Term 1_CAT_2025 (11).pdf', '2025-08-20 12:41:58', 3, 25),
-(15, 'FORM 4 english', 'TERM1', 'CAT', '2025', 'english', '../uploads/exams/1755694664_1755693718_report_27_Term 1_CAT_2025 (11).pdf', '2025-08-20 12:57:44', 3, 25);
+(14, 'FORM 4 MATHEMATICS', 'TERM1', 'CAT', 2025, 'MATHS', '../uploads/exams/1755693718_report_27_Term 1_CAT_2025 (11).pdf', '2025-08-20 12:41:58', 3, 25),
+(15, 'FORM 4 english', 'TERM1', 'CAT', 2025, 'english', '../uploads/exams/1755694664_1755693718_report_27_Term 1_CAT_2025 (11).pdf', '2025-08-20 12:57:44', 3, 25);
 
 -- --------------------------------------------------------
 
@@ -136,7 +138,9 @@ INSERT INTO `school` (`id`, `school_name`, `school_code`, `address`, `phone`, `e
 (1, 'BOWA JUNIOR SECONDARY', 'BOWA', 'KOMBANI', '098765789', 'BOWA@GMAIL.COM', '2025-08-11', 1),
 (2, 'ZIBANI JUNIOR SECONDARY', 'ZIBANI', 'NGOMBENI', '0987655433', 'kingi@gmail.com', '2025-08-14', 1),
 (3, 'PUNGU JUNIOR SECONDARY', 'PUNGU', 'PUNGU', '0987655433', 'P@GMAIL.COM', '2025-08-18', 1),
-(4, 'VORONI JUNIOR SCHOOL', 'VORONI', 'Matuga,Kwale county', '0702418632', 'fikratuljannah2@gmail.com', '2025-08-18', 1);
+(4, 'VORONI JUNIOR SCHOOL', 'VORONI', 'Matuga,Kwale county', '0702418632', 'fikratuljannah2@gmail.com', '2025-08-18', 1),
+(5, 'MWAKIGWENA JUNIOR SECONDARY', 'MWAKIGWENA', 'Kwale', '0702418632', 'hommiedelaco@gmail.com', '2025-08-24', 1),
+(6, 'BOWA JS', '02101551', 'Kombani', '0758565588', 'bowa@gmail.com', '2025-08-24', 0);
 
 -- --------------------------------------------------------
 
@@ -158,6 +162,48 @@ CREATE TABLE `score` (
   `teacher_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `score`
+--
+
+INSERT INTO `score` (`id`, `std_id`, `subject_id`, `term`, `exam_type`, `class_id`, `Score`, `performance`, `tcomments`, `school_id`, `teacher_id`, `created_at`) VALUES
+(28, 27, 22, 'Term 1', 'CAT', 50, 60, 'M.E', 'Good', 2, 24, '2025-08-18 18:16:05'),
+(29, 27, 24, 'Term 1', 'CAT', 50, 56, 'M.E', 'Good', 2, 24, '2025-08-18 18:16:16'),
+(30, 27, 23, 'Term 1', 'CAT', 50, 45, 'A.E', 'Average', 2, 24, '2025-08-18 18:16:26'),
+(31, 27, 26, 'Term 1', 'CAT', 50, 12, 'B.E', 'Put more effort', 2, 24, '2025-08-18 18:16:36'),
+(32, 27, 18, 'Term 1', 'CAT', 50, 78, 'E.E', 'Excellent', 2, 24, '2025-08-18 18:16:45'),
+(33, 27, 16, 'Term 1', 'CAT', 50, 70, 'E.E', 'Excellent', 2, 24, '2025-08-18 18:16:52'),
+(34, 27, 27, 'Term 1', 'CAT', 50, 80, 'E.E', 'Excellent', 2, 24, '2025-08-18 18:17:03'),
+(35, 27, 21, 'Term 1', 'CAT', 50, 49, 'A.E', 'Average', 2, 24, '2025-08-18 18:17:10'),
+(36, 27, 17, 'Term 1', 'CAT', 50, 52, 'M.E', 'Good', 2, 24, '2025-08-18 18:42:14'),
+(53, 32, 22, 'Term 1', 'CAT', 48, 67, 'M.E', 'Good', 2, 29, '2025-08-26 10:03:18'),
+(54, 32, 24, 'Term 1', 'CAT', 48, 56, 'M.E', 'Good', 2, 29, '2025-08-26 10:03:31'),
+(55, 32, 23, 'Term 1', 'CAT', 48, 45, 'A.E', 'Average', 2, 29, '2025-08-26 10:03:40'),
+(56, 32, 17, 'Term 1', 'CAT', 48, 67, 'M.E', 'Good', 2, 29, '2025-08-26 10:03:48'),
+(57, 32, 26, 'Term 1', 'CAT', 48, 67, 'M.E', 'Good', 2, 29, '2025-08-26 10:03:57'),
+(58, 32, 18, 'Term 1', 'CAT', 48, 90, 'E.E', 'Excellent', 2, 29, '2025-08-26 10:04:05'),
+(59, 32, 16, 'Term 1', 'CAT', 48, 78, 'E.E', 'Excellent', 2, 29, '2025-08-26 10:04:18'),
+(60, 32, 27, 'Term 1', 'CAT', 48, 76, 'E.E', 'Excellent', 2, 29, '2025-08-26 10:04:28'),
+(61, 32, 21, 'Term 1', 'CAT', 48, 74, 'E.E', 'Excellent', 2, 29, '2025-08-26 10:04:39'),
+(62, 32, 22, 'Term 2', 'CAT', 48, 78, 'E.E', 'Excellent', 2, 29, '2025-08-26 10:05:05'),
+(63, 32, 24, 'Term 2', 'CAT', 48, 45, 'A.E', 'Average', 2, 29, '2025-08-26 10:05:14'),
+(64, 32, 23, 'Term 2', 'CAT', 48, 68, 'M.E', 'Good', 2, 29, '2025-08-26 10:05:23'),
+(65, 32, 17, 'Term 2', 'CAT', 48, 68, 'M.E', 'Good', 2, 29, '2025-08-26 10:05:31'),
+(66, 32, 26, 'Term 2', 'CAT', 48, 68, 'M.E', 'Good', 2, 29, '2025-08-26 10:05:43'),
+(67, 32, 18, 'Term 2', 'CAT', 48, 45, 'A.E', 'Average', 2, 29, '2025-08-26 10:05:50'),
+(68, 32, 16, 'Term 2', 'CAT', 48, 67, 'M.E', 'Good', 2, 29, '2025-08-26 10:05:58'),
+(69, 32, 27, 'Term 2', 'CAT', 48, 87, 'E.E', 'Excellent', 2, 29, '2025-08-26 10:06:05'),
+(70, 32, 21, 'Term 2', 'CAT', 48, 45, 'A.E', 'Average', 2, 29, '2025-08-26 10:06:13'),
+(71, 32, 22, 'Term 1', 'Mid Term', 48, 90, 'E.E', 'Excellent', 2, 29, '2025-08-26 10:08:32'),
+(72, 32, 24, 'Term 1', 'Mid Term', 48, 80, 'E.E', 'Excellent', 2, 29, '2025-08-26 10:08:39'),
+(73, 32, 23, 'Term 1', 'Mid Term', 48, 70, 'E.E', 'Excellent', 2, 29, '2025-08-26 10:08:46'),
+(74, 32, 17, 'Term 1', 'Mid Term', 48, 60, 'M.E', 'Good', 2, 29, '2025-08-26 10:08:56'),
+(75, 32, 26, 'Term 1', 'Mid Term', 48, 50, 'M.E', 'Good', 2, 29, '2025-08-26 10:09:03'),
+(76, 32, 18, 'Term 1', 'Mid Term', 48, 40, 'A.E', 'Average', 2, 29, '2025-08-26 10:09:13'),
+(77, 32, 16, 'Term 1', 'Mid Term', 48, 30, 'A.E', 'Average', 2, 29, '2025-08-26 10:09:24'),
+(78, 32, 27, 'Term 1', 'Mid Term', 48, 20, 'B.E', 'Put more effort', 2, 29, '2025-08-26 10:09:36'),
+(79, 32, 21, 'Term 1', 'Mid Term', 48, 50, 'M.E', 'Good', 2, 29, '2025-08-26 10:09:50');
 
 -- --------------------------------------------------------
 
@@ -188,10 +234,10 @@ CREATE TABLE `student` (
 INSERT INTO `student` (`id`, `firstname`, `lastname`, `gender`, `dob`, `guardian_name`, `guardian_phone`, `address`, `status`, `photo`, `admno`, `school_id`, `class_id`) VALUES
 (25, 'samuel', 'mwathi', 'Male', '2025-08-06', 'KKK', '0765432350', 'hhhh', 'active', 'uploads/students/1755520183_1755067844_IHSAN0.png', 56789, 1, 40),
 (26, 'RASHID', 'ABDALA', 'Male', '2025-08-06', 'BAMBAULO', '0765432350', 'HJKL', 'active', 'uploads/students/1755521720_1755067844_IHSAN0.png', 9089, 3, 42),
-(27, 'Iddris', 'Matao', 'Male', '2025-08-20', 'Kk', 'Hhhh', 'Hhh', 'graduated', '', 6756, 2, 52),
+(27, 'Iddris', 'Matao', 'Male', '2025-08-20', 'Kk', 'Hhhh', 'Hhh', 'inactive', '', 6756, 2, 52),
 (28, 'Adam', 'Dzila', 'Male', '2025-08-20', 'Null', 'Maka', 'Shimoni', 'active', 'uploads/students/1755546698_1000244199.jpg', 9066, 4, 56),
 (29, 'HAMAD', 'JUMA', 'Male', '2025-08-06', 'kkkk', '0769565800', 'kwale', 'graduated', 'uploads/students/1755696295_1755067844_IHSAN0.png', 7890, 2, 52),
-(30, 'imran', 'abdallah', 'Male', '2025-08-06', 'kuku', '0769565800', 'kombani', 'transferred', '', 8907, 2, 53);
+(32, 'Imran', 'Abdallah', 'Male', '2025-08-06', 'kuku', '0769565800', 'JJ', 'active', '', 8907, 2, 48);
 
 -- --------------------------------------------------------
 
@@ -257,15 +303,16 @@ INSERT INTO `student_subject` (`id`, `student_id`, `school_id`, `subject_id`, `c
 (136, 29, 2, 23, 52, '2025-08-20'),
 (137, 29, 2, 26, 52, '2025-08-20'),
 (138, 29, 2, 27, 52, '2025-08-20'),
-(146, 30, 2, 16, 49, '2025-08-21'),
-(147, 30, 2, 17, 49, '2025-08-21'),
-(148, 30, 2, 18, 49, '2025-08-21'),
-(149, 30, 2, 21, 49, '2025-08-21'),
-(150, 30, 2, 22, 49, '2025-08-21'),
-(151, 30, 2, 23, 49, '2025-08-21'),
-(152, 30, 2, 26, 49, '2025-08-21'),
-(153, 30, 2, 27, 49, '2025-08-21'),
-(161, 30, 2, 25, 49, '2025-08-21');
+(179, 32, 2, 16, 48, '2025-08-26'),
+(180, 32, 2, 17, 48, '2025-08-26'),
+(181, 32, 2, 18, 48, '2025-08-26'),
+(182, 32, 2, 21, 48, '2025-08-26'),
+(183, 32, 2, 22, 48, '2025-08-26'),
+(184, 32, 2, 23, 48, '2025-08-26'),
+(185, 32, 2, 26, 48, '2025-08-26'),
+(186, 32, 2, 27, 48, '2025-08-26'),
+(194, 32, 2, 24, 48, '2025-08-26'),
+(195, 27, 2, 24, 48, '2025-08-26');
 
 -- --------------------------------------------------------
 
@@ -324,7 +371,8 @@ INSERT INTO `subject` (`id`, `name`, `school_id`, `is_compulsory`) VALUES
 (50, 'AGRICULTURE', 4, 1),
 (51, 'CREATIVE ARTS & SPORTS', 4, 1),
 (52, 'CRE', 4, 0),
-(53, 'IRE', 4, 0);
+(53, 'IRE', 4, 0),
+(54, 'CREATIVE ARTS & SPORTS', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -347,9 +395,11 @@ CREATE TABLE `teacher` (
 
 INSERT INTO `teacher` (`id`, `user_id`, `name`, `school_id`, `enrolment_no`, `date_hired`) VALUES
 (17, 164, 'ISSA Mwikali', 2, 'ZIBANI001', '2025-08-21'),
+(24, 166, 'Taabu Mafimbo', 2, 'ZIBANI002', '2025-08-13'),
 (26, 167, 'Ali Sudi', 3, 'PUNGU002', '2025-08-20'),
-(27, 172, 'Amina Gakurya', 2, 'ZIBANI003', '2025-08-18'),
-(28, 171, 'HAMISI HINDI', 2, 'ZIBANI004', '2025-08-09');
+(28, 171, 'HAMISI HINDI', 2, 'ZIBANI004', '2025-08-09'),
+(29, 165, 'Omar Sufiani', 2, 'ZIBANI005', '2025-08-14'),
+(30, 172, 'Amina Gakurya', 2, 'ZIBANI006', '2025-08-13');
 
 -- --------------------------------------------------------
 
@@ -372,15 +422,15 @@ CREATE TABLE `tsubject_class` (
 INSERT INTO `tsubject_class` (`id`, `teacher_id`, `subject_id`, `class_id`, `school_id`) VALUES
 (44, 26, 39, 42, 3),
 (45, 26, 43, 42, 3),
-(55, 27, 16, 52, 2),
-(56, 27, 17, 52, 2),
-(57, 27, 18, 52, 2),
-(58, 27, 21, 52, 2),
-(59, 27, 22, 52, 2),
-(60, 27, 23, 52, 2),
-(61, 27, 25, 52, 2),
-(62, 27, 26, 52, 2),
-(63, 27, 27, 52, 2),
+(46, 24, 16, 50, 2),
+(47, 24, 18, 50, 2),
+(48, 24, 17, 50, 2),
+(49, 24, 21, 50, 2),
+(50, 24, 22, 50, 2),
+(51, 24, 23, 50, 2),
+(52, 24, 24, 50, 2),
+(53, 24, 26, 50, 2),
+(54, 24, 27, 50, 2),
 (64, 28, 16, 53, 2),
 (65, 28, 17, 53, 2),
 (66, 28, 21, 53, 2),
@@ -388,7 +438,32 @@ INSERT INTO `tsubject_class` (`id`, `teacher_id`, `subject_id`, `class_id`, `sch
 (68, 28, 23, 53, 2),
 (69, 28, 25, 53, 2),
 (70, 28, 26, 53, 2),
-(71, 28, 27, 53, 2);
+(71, 28, 27, 53, 2),
+(72, 29, 16, 51, 2),
+(73, 29, 17, 51, 2),
+(74, 29, 18, 51, 2),
+(75, 29, 21, 51, 2),
+(76, 29, 22, 51, 2),
+(77, 29, 23, 51, 2),
+(78, 29, 24, 51, 2),
+(79, 29, 25, 51, 2),
+(80, 29, 26, 51, 2),
+(81, 29, 27, 51, 2),
+(82, 29, 16, 48, 2),
+(83, 29, 17, 48, 2),
+(84, 29, 18, 48, 2),
+(85, 29, 21, 48, 2),
+(86, 29, 22, 48, 2),
+(87, 29, 24, 48, 2),
+(88, 29, 26, 48, 2),
+(89, 29, 27, 48, 2),
+(90, 29, 23, 48, 2),
+(91, 30, 16, 48, 2),
+(92, 30, 16, 50, 2),
+(93, 30, 17, 48, 2),
+(94, 30, 17, 50, 2),
+(95, 29, 16, 50, 2),
+(96, 29, 17, 50, 2);
 
 -- --------------------------------------------------------
 
@@ -413,16 +488,18 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `FirstName`, `LastName`, `email`, `password`, `role`, `school_id`, `created_at`) VALUES
 (83, 'Abdalla', 'Juma', 'sudi@gmail.com', '$2y$10$e9ilZwRO9SvXg8JjzS3Cd.6roVI6qK1DJX0rYDiw5MscET.PT8j3W', 'user', 1, '2025-08-14 07:25:55'),
-(164, 'ISSA', 'Mwikali', 'issa@gmail.com', '$2y$10$35s9Xho7nNrQo81rW0TXH.9yAqEsyIbiQbqBiSsUEM2jOKh8W3h3a', 'admin', 2, '2025-08-14 09:39:49'),
-(165, 'Omar', 'Sufiani', 'hommiedelaco@gmail.com', '$2y$10$Y7NXG4eKbXldOnU6Dxd3W.zgyg5Ud5GWy2RWUz/d7kOde.QLDkn8W', 'dean', 2, '2025-08-14 09:44:15'),
-(166, 'Taabu', 'Mafimbo', 'T@GMAIL.COM', '$2y$10$uGibWi0TPFV4g4bUMWvEdeK3OMuefnymi.Nn3aYFOqMB/LkUlrX3W', 'dean', 2, '2025-08-14 11:29:53'),
+(164, 'ISSA', 'Mwikali', 'issa@gmail.com', '$2y$10$35s9Xho7nNrQo81rW0TXH.9yAqEsyIbiQbqBiSsUEM2jOKh8W3h3a', 'dean', 2, '2025-08-14 09:39:49'),
+(165, 'Omar', 'Sufiani', 'hommiedelaco@gmail.com', '$2y$10$Y7NXG4eKbXldOnU6Dxd3W.zgyg5Ud5GWy2RWUz/d7kOde.QLDkn8W', 'teacher', 2, '2025-08-14 09:44:15'),
+(166, 'Taabu', 'Mafimbo', 'T@GMAIL.COM', '$2y$10$uGibWi0TPFV4g4bUMWvEdeK3OMuefnymi.Nn3aYFOqMB/LkUlrX3W', 'admin', 2, '2025-08-14 11:29:53'),
 (167, 'Ali', 'Sudi', 'a@gmail.com', '$2y$10$53Fzq6qg3PAkTAWxVWB.1uiehNwKPJcaqkZj8j5meFiRYBUjW4MZW', 'Superadmin', 3, '2025-08-18 10:18:32'),
 (168, 'Mwanasiti', 'Mwataila', 'mwatailamwanasiti@gmail.com', '$2y$10$l9DIzuheRv05N/0xVhxuwOoDoCB/5xu8BpsBLMSEYN9U1vyzOBa.2', 'teacher', 2, '2025-08-18 17:41:43'),
 (169, 'Iddi', 'Boga', 'sufyanomar58@gmail.com', '$2y$10$0w5MQeBfGgFc77BsIUdJheQK6qAml.gzhw6gYLY4qjdUYSbWJY9.2', 'dean', 2, '2025-08-18 19:34:20'),
-(170, 'è´¹ä¸', 'è´¹ä¸', 'faithnjoroge035@gmail.com', '$2y$10$/HzniqMVyKPrGn/uW3A2XepOKTMpvqk6bJzPpopWJLML4NGVMSX0q', 'user', 2, '2025-08-19 19:47:04'),
+(170, 'è´¹ä¸', 'è´¹ä¸', 'faithnjoroge035@gmail.com', '$2y$10$/HzniqMVyKPrGn/uW3A2XepOKTMpvqk6bJzPpopWJLML4NGVMSX0q', 'teacher', 2, '2025-08-19 19:47:04'),
 (171, 'HAMISI', 'HINDI', 'hindihamisi@gmail.com', '$2y$10$UTP9dJA3B.Mb.pu3l5VYF.eUt2tYmkv37umIGJ5Mz8xF8fxVEOfoC', 'teacher', 2, '2025-08-20 07:02:15'),
 (172, 'Amina', 'Gakurya', 'aminagakurya802@gmail.com', '$2y$10$1pvj5nnqN74FkftOJw6m5ugQrUlV3Wpc47DaIzOjJUzzQTOr3pyxG', 'teacher', 2, '2025-08-20 09:28:55'),
-(174, 'Hamis', 'Salim', 'salimhamis200@gmail.com', '$2y$10$37t3VbfaortnBLNb6fS.hedLYvrBlNgziQAptYkTsG7Od3NVHjaDS', 'user', 1, '2025-08-20 12:33:23');
+(174, 'Hamis', 'Salim', 'salimhamis200@gmail.com', '$2y$10$37t3VbfaortnBLNb6fS.hedLYvrBlNgziQAptYkTsG7Od3NVHjaDS', 'user', 1, '2025-08-20 12:33:23'),
+(175, 'Iddi', 'Toyya', 'idditoyya@gmail.com', '$2y$10$PUcu0j.nYtdORK//ydWVD.J1qJaqQjnWTCHnjtQ/.F69d4cdkj6I.', 'user', 3, '2025-08-21 14:45:22'),
+(176, 'VINCENT', 'RONO', 'ronovincent32@gmail.com', '$2y$10$6eHd62FlBjUcJ44Ncxjrrut8NJxn1wABMryfqhn1T4ytp9nx/GriG', 'user', 3, '2025-08-21 15:03:07');
 
 -- --------------------------------------------------------
 
@@ -556,7 +633,7 @@ ALTER TABLE `year_log`
 -- AUTO_INCREMENT for table `class`
 --
 ALTER TABLE `class`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `class_teachers`
@@ -574,49 +651,49 @@ ALTER TABLE `exam`
 -- AUTO_INCREMENT for table `school`
 --
 ALTER TABLE `school`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `score`
 --
 ALTER TABLE `score`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 
 --
 -- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `student_subject`
 --
 ALTER TABLE `student_subject`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=162;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=196;
 
 --
 -- AUTO_INCREMENT for table `subject`
 --
 ALTER TABLE `subject`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT for table `teacher`
 --
 ALTER TABLE `teacher`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `tsubject_class`
 --
 ALTER TABLE `tsubject_class`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=175;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=177;
 
 --
 -- AUTO_INCREMENT for table `year_log`

@@ -1,9 +1,11 @@
+
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 include 'db.php';
 require_once '../vendor/autoload.php';
+
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -32,6 +34,7 @@ function getStudentProgress($student_id, $school_id, $conn) {
     $stmt->close();
     return $progress;
 }
+
 function generateProgressChart($progress) {
     if (empty($progress)) return null;
 
@@ -269,6 +272,50 @@ function generateStudentReport($student_id, $term, $exam_type, $year, $conn) {
     }
     if ($studentGradeRank === null) $studentGradeRank = $totalInGrade;
 
+//ASSIGN TEACHERS NAME,
+
+$teacher_name = "";
+$teacherComment = ""; // your existing variable
+
+$stmt = $conn->prepare("
+    SELECT name 
+    FROM class_teachers 
+    WHERE class_id = ? AND school_id = ? 
+    LIMIT 1
+");
+$stmt->bind_param("ii", $class_id, $school_id);
+$stmt->execute();
+$stmt->bind_result($teacher_name);
+$stmt->fetch();
+$stmt->close();
+
+if (!$teacher_name) {
+    $teacher_name = "Class Teacher"; // fallback
+}
+
+
+// --- Get HOI (Dean) Name ---
+$hoi_name = "";
+$sql2 = "SELECT CONCAT(FirstName, ' ', LastName) 
+         FROM users 
+         WHERE role = 'admin' AND school_id = ? 
+         LIMIT 1";
+
+if ($stmt2 = $conn->prepare($sql2)) {
+    $stmt2->bind_param("i", $school_id);
+    $stmt2->execute();
+    $stmt2->bind_result($hoi_name);
+    $stmt2->fetch();
+    $stmt2->close();
+}
+
+if (!$hoi_name) {
+    $hoi_name = "Head of Institution"; // fallback
+}
+
+
+
+
     // --- SUBJECT RANKS (per subject) ---
     $subjectRanks = [];
     foreach ($studentScores as $row) {
@@ -307,48 +354,6 @@ function generateStudentReport($student_id, $term, $exam_type, $year, $conn) {
         ];
     }
 
-//ASSIGN TEACHERS NAME,
-
-$teacher_name = "";
-$teacherComment = ""; // your existing variable
-
-$stmt = $conn->prepare("
-    SELECT name 
-    FROM class_teachers 
-    WHERE class_id = ? AND school_id = ? 
-    LIMIT 1
-");
-$stmt->bind_param("ii", $class_id, $school_id);
-$stmt->execute();
-$stmt->bind_result($teacher_name);
-$stmt->fetch();
-$stmt->close();
-
-if (!$teacher_name) {
-    $teacher_name = "Class Teacher"; // fallback
-}
-
-// --- Get HOI (Dean) Name ---
-$hoi_name = "";
-$sql2 = "SELECT CONCAT(FirstName, ' ', LastName) 
-         FROM users 
-         WHERE role = 'admin' AND school_id = ? 
-         LIMIT 1";
-
-if ($stmt2 = $conn->prepare($sql2)) {
-    $stmt2->bind_param("i", $school_id);
-    $stmt2->execute();
-    $stmt2->bind_result($hoi_name);
-    $stmt2->fetch();
-    $stmt2->close();
-}
-
-if (!$hoi_name) {
-    $hoi_name = "Head of Institution"; // fallback
-}
-
-
-
     // === Compute overall average for student ===
     $totalScore = 0;
     $subjectCount = count($studentScores);
@@ -379,10 +384,10 @@ $html = "
 
     $watermark
 
-    <h1 style='text-align: center; color: #090a0cff; margin-bottom: 0.2em; font-size:16px;'>
+    <h1 style='text-align: center; color: #090a0cff; margin-bottom: 0.2em; font-size: 20px;'>
         " . htmlspecialchars($school_name, ENT_QUOTES) . "
     </h1>
-    <h2 style='text-align: center; color: #070808ff; margin-top: 0.2em; font-size: 13px;'>
+    <h2 style='text-align: center; color: #070808ff; margin-top: 0.2em; font-size: 16px;'>
         STUDENT REPORT FORM
     </h2>
 
@@ -430,11 +435,7 @@ $html .= "
     <div style='width: 65%;'>
         <p><strong>Class Position:</strong> {$studentClassRank}/{$totalStudentsInClass}</p>
         <p><strong>Overall Position:</strong> {$studentGradeRank}/{$totalInGrade}</p>
-
-
-
-
-        <h3 style='margin-top: 5px;'>Teacher:{$teacher_name}'s:</h3>
+          <h3 style='margin-top: 5px;'>Teacher: {$teacher_name}</h3>
         <p style='font-size: 15px; margin-bottom: 0;'>$teacherComment</p>
     </div> <br>
 
@@ -468,7 +469,6 @@ if ($chartUrl) {
     <div style='margin: 0;'>
         <img src='{$chartUrl}' style='width:100%; max-width:450px; height:auto; display:block;' />
     </div>";
-
 }
 
 // Signatures at bottom
@@ -559,3 +559,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && (isset($_GET['id']) || isset($_GET['
     }
 }
 ?>
+
+
